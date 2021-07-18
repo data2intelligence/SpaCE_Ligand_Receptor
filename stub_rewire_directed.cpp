@@ -7,9 +7,11 @@ stub_rewire_directed::stub_rewire_directed(const vector<pair<size_t, size_t> > &
 	size_t i, j;
 	vector<pair<size_t, size_t> >::const_iterator iter;
 
+	// map from vertex index to location in index_vec, for both sides of edges
 	map<size_t, size_t> inxmap_a, inxmap_b;
 	map<size_t, size_t>::iterator iter_a, iter_b;
 
+	// Scan through the interactions, and record in (a) and out (b) degrees of vertices
 	for(iter = interactions.begin(); iter != interactions.end(); iter++)
 	{
 		i = iter->first;
@@ -40,6 +42,7 @@ stub_rewire_directed::stub_rewire_directed(const vector<pair<size_t, size_t> > &
 	Nvertex_a = degree_vec_a.size();
 	Nvertex_b = degree_vec_b.size();
 
+	// arrays for randomization
 	candidate_a = new size_t[Nvertex_a];
 	candidate_b = new size_t[Nvertex_b];
 
@@ -51,6 +54,7 @@ stub_rewire_directed::stub_rewire_directed(const vector<pair<size_t, size_t> > &
 
 	visited = new bool[Nvertex_b];
 
+	// only degree information is reserved after construction
 	for (i=j=0 ; i<Nvertex_a ; i++)
 	{
 		candidate_a[i] = i;
@@ -132,6 +136,7 @@ size_t stub_rewire_directed::output(vector<pair<size_t, size_t> > &network) cons
 
 	for(i=0;i<Nvertex_a;i++)
 	{
+		// original vertex index
 		inxa = index_vec_a[i];
 
 		for(j=0; j<degree_cur_a[i]; j++)
@@ -142,7 +147,7 @@ size_t stub_rewire_directed::output(vector<pair<size_t, size_t> > &network) cons
 			if(N_edge >= network.size())
 			{
 				cerr << "Warning: network size is already full" << endl;
-				continue;
+				break;
 			}
 
 			network[N_edge].first = inxa;
